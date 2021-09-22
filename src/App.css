@@ -3,14 +3,11 @@
   justify-content: center;
   align-items: center;
   height: 40px;
-  background: black;
+  background: #2E5090;
   color: white;
   font-weight: 500;
 }
 
 section {
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  margin: 50px 0;
+  margin: 50px 10px;
 }

@@ -2,7 +2,7 @@ import './App.css';
 import { Route, Redirect, Switch } from "react-router-dom";
 import { lazy, Suspense } from "react";
 const Login = lazy(() => import("./views/Login/Login"));
-
+const Home = lazy(() => import("./views/Home/Home"));
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
             <Redirect to='/login' />
           </Route>
           <Route path='/login' component={Login}/>
-          <Route path='/home' />
+          <Route path='/home' component={Home}/>
         </Switch>
       </Suspense>
     </div>
