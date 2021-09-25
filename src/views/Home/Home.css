@@ -1,8 +1,15 @@
 .add-new {
   border-radius: 20px;
   cursor: pointer;
-  background: #2E5090;
+  background: #2e5090;
   padding: 10px;
   color: white;
   font-weight: 600;
+}
+.action-div {
+  display: flex;
+  justify-content: space-between;
+}
+.action-div .label {
+  width: unset;
 }

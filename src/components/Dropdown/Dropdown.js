@@ -1,8 +1,15 @@
+import { useRef } from "react";
+
 const Dropdown = (props) => {
-  console.log(props);
+  const dropdownRef = useRef("");
+
+  const handleChange = () => {
+    props.setDropdownvalue(dropdownRef.current.value);
+  };
+
   return (
     <>
-      <select {...props}>
+      <select ref={dropdownRef} onChange={handleChange}>
         {props.options &&
           props.options.map((option) => (
             <option key={option.id} value={option.id}>

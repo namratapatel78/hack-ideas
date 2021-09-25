@@ -24,7 +24,6 @@ const Form = (props) => {
   };
 
   const resetForm = (event) => {
-    console.log(event);
     event.preventDefault();
     // showAndHideModal();
   };

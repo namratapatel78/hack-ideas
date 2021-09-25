@@ -10,7 +10,7 @@ const Card = (props) => {
       <div className='meta-data'>
         <div className='date-and-votes'>
           <div className='created-date'>
-            {props.idea.creationDate.toLocaleString("en-US", {
+            {new Date(props.idea.creationDate).toLocaleString("en-US", {
               year: "numeric",
               month: "short",
               day: "numeric",
