@@ -1,6 +1,7 @@
-import { useRef } from "react";
+import React, { useRef } from "react";
 
 const Dropdown = (props) => {
+  console.log("Dropdown");
   const dropdownRef = useRef("");
 
   const handleChange = () => {
@@ -20,4 +21,4 @@ const Dropdown = (props) => {
     </>
   );
 };
-export default Dropdown;
+export default React.memo(Dropdown);

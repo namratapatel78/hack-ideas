@@ -140,6 +140,7 @@ const Home = () => {
             return <Card idea={idea} key={idea.id} likeUnlike={likeUnlike} />;
           })}
       </div>
+
       <div className='pagination'>
         {pages.length > 0 &&
           pages.map((page) => {
