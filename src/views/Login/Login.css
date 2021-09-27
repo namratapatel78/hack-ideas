@@ -9,3 +9,8 @@
 .input-div {
   margin-right: 5px;
 }
+.error-div {
+  color: red;
+  margin-bottom: 20px;
+  font-size: 12px;
+}
