@@ -18,7 +18,7 @@ const Home = () => {
     let list = JSON.parse(localStorage.getItem("list"));
     let ideas = list.slice(pageNo * pageSize, (pageNo + 1) * pageSize);
     setIdeas(ideas);
-  }, [pageNo]);
+  }, [pageNo, pageSize]);
 
   const sortList = useCallback(() => {
     let listCopy = JSON.parse(localStorage.getItem("list"));
