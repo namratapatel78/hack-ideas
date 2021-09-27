@@ -48,7 +48,7 @@ const Form = (props) => {
           ref={titleRef}
           className='input-text'
           type='text'
-          maxlength='100'
+          maxLength='100'
         />
       </div>
       <div className='flex-div'>
@@ -58,7 +58,7 @@ const Form = (props) => {
           className='input-text'
           rows='4'
           cols='50'
-          maxlength='500'></textarea>
+          maxLength='500'></textarea>
       </div>
       <div className='flex-div'>
         <span className='label'>Tags</span>
@@ -80,7 +80,7 @@ const Form = (props) => {
       </div>
       <div className='actions'>
         <button type='submit'>Add Idea</button>
-        <button onClick={resetForm}>Cancel</button>
+        {/* <button onClick={resetForm}>Cancel</button> */}
       </div>
     </form>
   );
