@@ -1,26 +1,37 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { TAGS } from "../../constants/constant";
-import Dropdown from "../Dropdown/Dropdown";
 import "./Form.css";
 
 const Form = (props) => {
   const { showAndHideModal } = props;
   const titleRef = useRef("");
   const descRef = useRef("");
+  const [tags, setTags] = useState(TAGS);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (titleRef.current.value && descRef.current.value) {
       let ideaObj = {
+        id: Math.floor(Math.random() * 100),
         title: titleRef.current.value,
         description: descRef.current.value,
-        tags: ["feature"],
-        creationDate: new Date(),
+        tags: tags,
+        creationDate: new Date().getTime(),
         votes: 0,
       };
       props.addIdea(ideaObj);
       props.showAndHideModal();
     }
+  };
+
+  const addTag = (tagId) => {
+    const tagsCopy = [...tags];
+    tagsCopy.forEach((tag) => {
+      if (tag.id === tagId) {
+        tag.checked = !tag.checked;
+      }
+    });
+    setTags(tagsCopy);
   };
 
   const resetForm = (event) => {
@@ -33,7 +44,12 @@ const Form = (props) => {
       <div className='add-idea'>Add Challenge/Idea</div>
       <div className='flex-div'>
         <span className='label'>Title</span>
-        <input ref={titleRef} className='input-text' type='text' />
+        <input
+          ref={titleRef}
+          className='input-text'
+          type='text'
+          maxlength='100'
+        />
       </div>
       <div className='flex-div'>
         <span className='label'>Description</span>
@@ -41,11 +57,26 @@ const Form = (props) => {
           ref={descRef}
           className='input-text'
           rows='4'
-          cols='50'></textarea>
+          cols='50'
+          maxlength='500'></textarea>
       </div>
       <div className='flex-div'>
         <span className='label'>Tags</span>
-        <Dropdown options={TAGS} />
+        {tags.map((tag, index) => {
+          return (
+            <div>
+              <input
+                key={tag.text + tag.id + index}
+                type='checkbox'
+                checked={tag.checked}
+                onChange={() => {
+                  addTag(tag.id);
+                }}
+              />
+              {tag.text}
+            </div>
+          );
+        })}
       </div>
       <div className='actions'>
         <button type='submit'>Add Idea</button>

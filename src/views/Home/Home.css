@@ -13,3 +13,14 @@
 .action-div .label {
   width: unset;
 }
+.pagination {
+  display: flex;
+  justify-content: center;
+}
+.pagination span {
+  margin: 20px 5px;
+}
+.highlight {
+  color: #2e5090;
+  font-weight: 600;
+}

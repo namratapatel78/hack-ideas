@@ -1,5 +1,3 @@
-// import like from '../../assets/like.svg';
-// import likeColored from '../../assets/like-colored.svg';
 import { useCallback, useEffect, useState } from "react";
 import Card from "../../components/Card/Card";
 import Dropdown from "../../components/Dropdown/Dropdown";
@@ -10,33 +8,20 @@ import "./Home.css";
 
 const Home = () => {
   const [openModal, setOpenModal] = useState(false);
-  const [list, setList] = useState(IDEAS);
   const [ideas, setIdeas] = useState([]);
   const [pageSize, setPageSize] = useState(4);
   const [pageNo, setPageNo] = useState(0);
-  const [sortBy, setSortBy] = useState({
-    id: "filter-1",
-    text: "Creation date ascending",
-  });
+  const [pages, setPages] = useState([]);
+  const [sortBy, setSortBy] = useState("date-desc");
 
   const setIdeasList = useCallback(() => {
+    let list = JSON.parse(localStorage.getItem("list"));
     let ideas = list.slice(pageNo * pageSize, (pageNo + 1) * pageSize);
     setIdeas(ideas);
-  }, [list, pageNo, pageSize]);
-
-  useEffect(() => {
-    document.addEventListener("scroll", onScroll, {
-      passive: true,
-    });
-    setIdeasList();
-  }, []);
-
-  useEffect(() => {
-    setIdeasList();
-  }, [pageSize, setIdeasList]);
+  }, [pageNo]);
 
   const sortList = useCallback(() => {
-    let listCopy = [...list];
+    let listCopy = JSON.parse(localStorage.getItem("list"));
     switch (sortBy) {
       case "votes-asc":
         listCopy.sort((a, b) => a.votes - b.votes);
@@ -54,26 +39,28 @@ const Home = () => {
           return a.creationDate - b.creationDate;
         });
     }
-    setList(listCopy);
-  }, [sortBy]);
+    localStorage.setItem("list", JSON.stringify(listCopy));
+    setIdeasList();
+  }, [setIdeasList, sortBy]);
+
+  useEffect(() => {
+    if (!localStorage.getItem("list")) {
+      localStorage.setItem("list", JSON.stringify(IDEAS));
+    }
+    setIdeasList();
+    // pagination list
+    let totalItems = JSON.parse(localStorage.getItem("list")).length;
+    let totalPages = Math.ceil(totalItems / pageSize);
+    let pages = [];
+    for (let index = 0; index < totalPages; index++) {
+      pages.push(index);
+    }
+    setPages(pages);
+  }, []);
 
   useEffect(() => {
     sortList();
   }, [sortBy, sortList]);
-
-  const onScroll = () => {
-    if (bottomVisible()) {
-      setPageSize(pageSize * 2);
-    }
-  };
-
-  const bottomVisible = () => {
-    const scrollY = window.scrollY;
-    const visible = document.documentElement.clientHeight;
-    const pageHeight = document.documentElement.scrollHeight;
-    const bottomOfPage = visible + scrollY >= pageHeight;
-    return bottomOfPage || pageHeight < visible;
-  };
 
   // Show and hide add Idea form
   const openForm = () => {
@@ -82,10 +69,46 @@ const Home = () => {
     });
   };
 
-  const addIdea = (idea) => {
+  const likeUnlike = (id) => {
     let ideasCopy = [...ideas];
-    ideasCopy.unshift(idea);
+    ideasCopy.forEach((idea) => {
+      if (idea.id === id) {
+        if (idea.liked) {
+          idea.liked = false;
+          idea.votes -= 1;
+        } else {
+          idea.liked = true;
+          idea.votes += 1;
+        }
+      }
+    });
     setIdeas(ideasCopy);
+
+    let listCopy = JSON.parse(localStorage.getItem("list"));
+    listCopy.forEach((idea) => {
+      if (idea.id === id) {
+        if (idea.liked) {
+          idea.liked = false;
+          idea.votes -= 1;
+        } else {
+          idea.liked = true;
+          idea.votes += 1;
+        }
+      }
+      localStorage.setItem("list", JSON.stringify(listCopy));
+    });
+  };
+
+  const addIdea = (idea) => {
+    let listCopy = JSON.parse(localStorage.getItem("list"));
+    listCopy.unshift(idea);
+    localStorage.setItem("list", JSON.stringify(listCopy));
+
+    if (pageNo === 0) {
+      setIdeasList();
+    } else {
+      setPageNo(0);
+    }
   };
 
   const showAndHideModal = () => {
@@ -114,11 +137,24 @@ const Home = () => {
       <div className='ideas-list'>
         {ideas.length > 0 &&
           ideas.map((idea) => {
-            return <Card idea={idea} key={idea.id} />;
+            return <Card idea={idea} key={idea.id} likeUnlike={likeUnlike} />;
           })}
       </div>
-
-      <div className='pagination'></div>
+      <div className='pagination'>
+        {pages.length > 0 &&
+          pages.map((page) => {
+            return (
+              <span
+                key={"page" + page}
+                className={page === pageNo ? "highlight" : "pointer"}
+                onClick={() => {
+                  setPageNo(page);
+                }}>
+                {page + 1}
+              </span>
+            );
+          })}
+      </div>
     </section>
   );
 };

@@ -1,8 +1,12 @@
+import { useContext } from "react";
 import likeColored from "../../assets/like-colored.svg";
 import like from "../../assets/like.svg";
+import Context from "../../context";
 import "./Card.css";
 
 const Card = (props) => {
+  const context = useContext(Context);
+
   return (
     <div className='idea-card'>
       <div className='title'>{props.idea.title}</div>
@@ -18,19 +22,26 @@ const Card = (props) => {
           </div>
           <div className='votes'>
             <img
-              className='like-icon'
+              className={context.isLoggedIn ? "pointer like-icon" : "like-icon"}
               alt='like'
-              src={props.idea.liked ? likeColored : like}
+              src={context.isLoggedIn && props.idea.liked ? likeColored : like}
+              onClick={() => {
+                if (localStorage.getItem("employeeId")) {
+                  props.likeUnlike(props.idea.id);
+                }
+              }}
             />
             {props.idea.votes}
           </div>
         </div>
         <div className='tags'>
-          {props.idea.tags.map((tag) => {
+          {props.idea.tags.map((tag, index) => {
             return (
-              <div className='tag' key={tag}>
-                #{tag}
-              </div>
+              tag.checked && (
+                <div className='tag' key={tag.text + index}>
+                  #{tag.text}
+                </div>
+              )
             );
           })}
         </div>
